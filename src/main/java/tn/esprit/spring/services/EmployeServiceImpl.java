@@ -3,6 +3,7 @@ package tn.esprit.spring.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,12 @@ public class EmployeServiceImpl implements IEmployeService {
 
 	@Transactional	
 	public void affecterEmployeADepartement(int employeId, int depId) {
-		Departement depManagedEntity = deptRepoistory.findById(depId).get();
-		Employe employeManagedEntity = employeRepository.findById(employeId).get();
+		Optional<Departement> e = deptRepoistory.findById(depId);
+		Optional<Employe> d = employeRepository.findById(employeId);
+		if(e.isPresent()) {
+		Departement depManagedEntity = e.get();
+		
+		Employe employeManagedEntity = d.get();
 
 		if(depManagedEntity.getEmployes() == null){
 
@@ -58,7 +63,7 @@ public class EmployeServiceImpl implements IEmployeService {
 			depManagedEntity.getEmployes().add(employeManagedEntity);
 
 		}
-
+		}
 	}
 	@Transactional
 	public void desaffecterEmployeDuDepartement(int employeId, int depId)
